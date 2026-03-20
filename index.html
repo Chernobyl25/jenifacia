@@ -1,3 +1,4 @@
+
 <html>
 <head>
   <title>Memorama VR Pro - Con Joystick</title>
@@ -34,20 +35,18 @@
     <a-sky src="#sky" rotation="0 -90 0"></a-sky>
     <a-light type="ambient" color="#FFF" intensity="0.7"></a-light>
 
-    <!-- Rig de cámara -->
-    <a-entity id="rig" position="0 0 5">
-      <a-camera look-controls wasd-controls position="0 2.5 0" joystick-pointer>
-  <!-- Puntero eliminado según tu maestro -->
-</a-camera>
-    </a-entity>
 
 <a-entity id="rightHand" hand-controls="hand: right" raycaster="objects: .clickable"></a-entity>
     
-    <!-- Control izquierdo -->
-<a-entity hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+   <!-- Control derecho para seleccionar cartas -->
+<a-entity id="rightHand" hand-controls="hand: right"
+          raycaster="objects: .clickable"></a-entity>
  
-<!-- Control derecho -->
-<a-entity hand-controls="hand: right; handModelStyle: lowPoly; color: #ccffcc"></a-entity>
+<!-- Control izquierdo solo visual, opcional -->
+<a-entity hand-controls="hand: left"></a-entity>
+ 
+<!-- Cámara sin puntero -->
+<a-camera look-controls wasd-controls position="0 2.5 0"></a-camera>
 
     <!-- Tablero -->
     <a-entity position="0 2.5 -0.5">
@@ -254,12 +253,12 @@
           this.selected = null;
         }
 
-        // Botón A (0) para click
-        if(gp.buttons[0].pressed && this.selected){
-          this.selected.emit('click');
-        }
-      }
-    });
+        const rightHand = document.querySelector('#rightHand');
+ 
+rightHand.addEventListener('triggerdown', () => {
+    const intersects = rightHand.components.raycaster.intersectedEls;
+    intersects.forEach(el => el.emit('click'));
+});
   </script>
 </body>
 </html>
